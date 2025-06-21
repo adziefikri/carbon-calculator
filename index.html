@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carbon Tracker - Offline</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f0f8f5;
+    }
+    h2 {
+      color: #2e7d32;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #result {
+      background: #fff;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Carbon Footprint Calculator</h2>
+
+  <label>Distance driven per week (km):</label>
+  <input type="number" id="km" placeholder="e.g. 100" />
+
+  <label>Electricity usage per month (kWh):</label>
+  <input type="number" id="kwh" placeholder="e.g. 200" />
+
+  <label>Meat consumption:</label>
+  <select id="meat">
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
+
+  <button onclick="calculateCarbon()">Calculate</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculateCarbon() {
+      const km = parseFloat(document.getElementById('km').value) || 0;
+      const kwh = parseFloat(document.getElementById('kwh').value) || 0;
+      const meat = document.getElementById('meat').value;
+
+      let carbon = 0;
+      carbon += km * 0.21 * 4;       // km per week * 4 weeks * emission factor
+      carbon += kwh * 0.43;          // kWh * emission factor
+
+      if (meat === 'low') carbon += 50;
+      else if (meat === 'medium') carbon += 100;
+      else if (meat === 'high') carbon += 200;
+
+      document.getElementById('result').innerHTML = 
+        `<h3>Total Estimated CO₂: ${carbon.toFixed(1)} kg/month</h3>`;
+    }
+  </script>
+</body>
+</html>
