@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carbon Tracker - Offline</title>
+  <title>EcoTourism Carbon Tracker</title>
   <style>
     body {
       font-family: sans-serif;
@@ -29,41 +29,52 @@
   </style>
 </head>
 <body>
-  <h2>Carbon Footprint Calculator</h2>
+  <h2>EcoTourism Carbon Footprint Calculator</h2>
 
-  <label>Distance driven per week (km):</label>
-  <input type="number" id="km" placeholder="e.g. 100" />
+  <label>Total distance traveled (km):</label>
+  <input type="number" id="distance" placeholder="e.g. 120" />
 
-  <label>Electricity usage per month (kWh):</label>
-  <input type="number" id="kwh" placeholder="e.g. 200" />
-
-  <label>Meat consumption:</label>
-  <select id="meat">
-    <option value="low">Low</option>
-    <option value="medium">Medium</option>
-    <option value="high">High</option>
+  <label>Mode of transport:</label>
+  <select id="transport">
+    <option value="car">Car</option>
+    <option value="bus">Bus</option>
+    <option value="boat">Boat</option>
   </select>
 
-  <button onclick="calculateCarbon()">Calculate</button>
+  <label>Nights stayed (accommodation):</label>
+  <input type="number" id="nights" placeholder="e.g. 2" />
+
+  <label>Tourist activities (e.g., boat ride, hiking):</label>
+  <input type="number" id="activities" placeholder="e.g. 3" />
+
+  <label>Plastic bottles used:</label>
+  <input type="number" id="bottles" placeholder="e.g. 5" />
+
+  <button onclick="calculateFootprint()">Calculate</button>
 
   <div id="result"></div>
 
   <script>
-    function calculateCarbon() {
-      const km = parseFloat(document.getElementById('km').value) || 0;
-      const kwh = parseFloat(document.getElementById('kwh').value) || 0;
-      const meat = document.getElementById('meat').value;
+    function calculateFootprint() {
+      const distance = parseFloat(document.getElementById('distance').value) || 0;
+      const transport = document.getElementById('transport').value;
+      const nights = parseInt(document.getElementById('nights').value) || 0;
+      const activities = parseInt(document.getElementById('activities').value) || 0;
+      const bottles = parseInt(document.getElementById('bottles').value) || 0;
 
-      let carbon = 0;
-      carbon += km * 0.21 * 4;       // km per week * 4 weeks * emission factor
-      carbon += kwh * 0.43;          // kWh * emission factor
+      let transportFactor = 0.2; // default for car
+      if (transport === 'bus') transportFactor = 0.1;
+      if (transport === 'boat') transportFactor = 0.3;
 
-      if (meat === 'low') carbon += 50;
-      else if (meat === 'medium') carbon += 100;
-      else if (meat === 'high') carbon += 200;
+      const travelCO2 = distance * transportFactor;
+      const stayCO2 = nights * 15; // avg 15kg CO2/night
+      const activityCO2 = activities * 5; // avg 5kg per activity
+      const bottleCO2 = bottles * 0.1; // 0.1kg CO2 per bottle
+
+      const total = travelCO2 + stayCO2 + activityCO2 + bottleCO2;
 
       document.getElementById('result').innerHTML = 
-        `<h3>Total Estimated CO₂: ${carbon.toFixed(1)} kg/month</h3>`;
+        `<h3>Total Trip CO₂ Footprint: ${total.toFixed(2)} kg</h3>`;
     }
   </script>
 </body>
